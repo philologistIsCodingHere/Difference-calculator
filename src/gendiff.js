@@ -1,5 +1,5 @@
 import { program } from 'commander';
-import getDate from './parser.js'
+import getDate from './parser.js';
 
 program
   .description('Compares two configuration files and shows a difference.')
@@ -8,7 +8,7 @@ program
   .argument('<filepath2>')
   .option('-f, --format <type>', 'output format')
   .action((filepath1, filepath2) => {
-    getDate(filepath1, filepath2);
+    console.log(getDate(filepath1, filepath2));
   });
 
 program.parse();
