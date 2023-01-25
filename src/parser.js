@@ -10,7 +10,8 @@ const getDate = (path1, path2) => {
   const absolutePath2 = path.resolve(cwd2, path2);
   const readPath1 = readFileSync(absolutePath1);
   const readPath2 = readFileSync(absolutePath2);
-  console.log(getDiff(JSON.parse(readPath1), JSON.parse(readPath2)));
+  const result = getDiff(JSON.parse(readPath1), JSON.parse(readPath2));
+  return result;
 };
 
 export default getDate;
