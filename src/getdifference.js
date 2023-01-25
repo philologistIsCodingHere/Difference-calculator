@@ -12,7 +12,7 @@ const getDiff = (obj1, obj2) => {
   const keys2 = Object.keys(obj2);
   const unionKeys = _.union(keys1, keys2);
   unionKeys.sort();
-  const content = unionKeys.map((key) =>{
+  const content = unionKeys.map((key) => {
     const [value1, value2] = [obj1[key], obj2[key]];
     if (keys1.includes(key) && !keys2.includes(key)) {
       result = `${INDENT}${DELETED}${key}: ${value1}`;
@@ -28,7 +28,7 @@ const getDiff = (obj1, obj2) => {
       }
     }
     return result;
-  })
+  });
   return `{${LINE_BREAK}${content.join(LINE_BREAK)}${LINE_BREAK}}`;
 };
 
