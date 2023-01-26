@@ -1,7 +1,7 @@
 install:
 	npm ci
 gendiff:
-	node bin/gendiff.js __fixtures__/file1.json __fixtures__/file2.json
+	node bin/gendiff.js __tests__/__fixtures__/file1.yml __tests__/__fixtures__/file2.yml
 publish:
 	npm publish --dry-run
 lint:
