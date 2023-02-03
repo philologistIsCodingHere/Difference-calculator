@@ -21,7 +21,7 @@ const getDate = (path1, path2, format) => {
   if (format === 'stylish') {
     return getStylish(result);
   }
-  return 1;
+  return getStylish(result);
 };
 
 export default getDate;
