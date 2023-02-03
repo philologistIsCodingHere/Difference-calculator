@@ -1,35 +1,40 @@
 import _ from 'lodash';
 
-const INDENT = '  ';
-const ADDED = '+ ';
-const DELETED = '- ';
-const UNCHANGED = '  ';
-const LINE_BREAK = '\n';
-
 const getDiff = (obj1, obj2) => {
-  let result;
-  const keys1 = Object.keys(obj1);
-  const keys2 = Object.keys(obj2);
+  const [keys1, keys2] = [Object.keys(obj1), Object.keys(obj2)];
   const unionKeys = _.union(keys1, keys2);
   unionKeys.sort();
-  const content = unionKeys.map((key) => {
+  return unionKeys.reduce((acc, key) => {
+    let type;
+    let value;
     const [value1, value2] = [obj1[key], obj2[key]];
     if (keys1.includes(key) && !keys2.includes(key)) {
-      result = `${INDENT}${DELETED}${key}: ${value1}`;
+      type = 'removed';
+      value = value1;
     }
     if (keys2.includes(key) && !keys1.includes(key)) {
-      result = `${INDENT}${ADDED}${key}: ${value2}`;
+      type = 'added';
+      value = value2;
     }
     if (keys1.includes(key) && keys2.includes(key)) {
       if (obj1[key] === obj2[key]) {
-        result = `${INDENT}${UNCHANGED}${key}: ${value1}`;
+        type = 'unchanged';
+        value = value1;
       } else {
-        result = `${INDENT}${DELETED}${key}: ${value1}${LINE_BREAK}${INDENT}${ADDED}${key}: ${value2}`;
+        type = 'changed';
+        value = [value1, value2];
       }
     }
-    return result;
-  });
-  return `{${LINE_BREAK}${content.join(LINE_BREAK)}${LINE_BREAK}}`;
+    if (_.isObject(value1) && _.isObject(value2)) {
+      type = 'nested';
+      value = getDiff(value1, value2);
+    }
+    acc[key] = {
+      typeValue: type,
+      valueItem: value,
+    };
+    return acc;
+  }, {});
 };
 
 export default getDiff;
