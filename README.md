@@ -12,3 +12,5 @@
 [![asciicast](https://asciinema.org/a/lYcmsVImiK4VU8BW0rPbTAsa8.svg)](https://asciinema.org/a/lYcmsVImiK4VU8BW0rPbTAsa8)
 ### Gendiff for YAML:
 [![asciicast](https://asciinema.org/a/0PXrwru72OFvkYr8YqWYvF2dx.svg)](https://asciinema.org/a/0PXrwru72OFvkYr8YqWYvF2dx)
+### Stylish format:
+[![asciicast](https://asciinema.org/a/Ta90FomXlrUnND0VjFFl06uYq.svg)](https://asciinema.org/a/Ta90FomXlrUnND0VjFFl06uYq)
