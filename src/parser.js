@@ -3,12 +3,11 @@ import path from 'path';
 import { readFileSync } from 'fs';
 import yaml from 'js-yaml';
 import getDiff from './getdifference.js';
-import getStylish from './stylish.js';
+import formats from './formatters/index.js';
 
 const getDate = (path1, path2, format) => {
   let result;
-  const cwd1 = process.cwd(path1);
-  const cwd2 = process.cwd(path2);
+  const [cwd1, cwd2] = [process.cwd(path1), process.cwd(path2)];
   const absolutePath1 = path.resolve(cwd1, path1);
   const absolutePath2 = path.resolve(cwd2, path2);
   const readPath1 = readFileSync(absolutePath1);
@@ -18,10 +17,7 @@ const getDate = (path1, path2, format) => {
   } else if (path.extname(path1) === ('.yml' || '.yaml') && path.extname(path2) === ('.yml' || '.yaml')) {
     result = getDiff(yaml.load(readPath1), yaml.load(readPath2));
   }
-  if (format === 'stylish') {
-    return getStylish(result);
-  }
-  return getStylish(result);
+  return formats[format](result);
 };
 
 export default getDate;
