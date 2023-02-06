@@ -7,6 +7,12 @@
 
 ### Description:
 #### A difference calculator is a program that determines the difference between two data structures.
+### Installation:
+```
+1. git clone git@github.com:philologistIsCodingHere/frontend-project-46.git
+2. make install
+3. npm link (maybe need sudo command)
+```
 
 ### Gendiff for JSON:
 [![asciicast](https://asciinema.org/a/lYcmsVImiK4VU8BW0rPbTAsa8.svg)](https://asciinema.org/a/lYcmsVImiK4VU8BW0rPbTAsa8)
@@ -16,3 +22,5 @@
 [![asciicast](https://asciinema.org/a/Ta90FomXlrUnND0VjFFl06uYq.svg)](https://asciinema.org/a/Ta90FomXlrUnND0VjFFl06uYq)
 ### Plain format:
 [![asciicast](https://asciinema.org/a/wftKqknLp4udH9qrAGQld0CBm.svg)](https://asciinema.org/a/wftKqknLp4udH9qrAGQld0CBm)
+### JSON format:
+[![asciicast](https://asciinema.org/a/B3tGFN6Is3N8qxnMcQvknXRiu.svg)](https://asciinema.org/a/B3tGFN6Is3N8qxnMcQvknXRiu)
