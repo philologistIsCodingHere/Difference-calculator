@@ -15,18 +15,22 @@ const getFixturePath = (filename) => join(__dirname, '__fixtures__', filename);
 
 const readFile = (filename) => readFileSync(getFixturePath(filename), 'utf-8');
 
-test('json', () => {
+test('json files', () => {
   const expectedStylish = readFile('expectedFileStylish.txt');
   const expectedPlain = readFile('expectedFilePlain.txt');
+  const expectedJson = readFile('expectedFileJson.txt');
   const [jsonFile1, jsonFile2] = [getFixturePath(JSON_FILE_1), getFixturePath(JSON_FILE_2)];
   expect(getDate(jsonFile1, jsonFile2, 'stylish')).toEqual(expectedStylish);
   expect(getDate(jsonFile1, jsonFile2, 'plain')).toEqual(expectedPlain);
+  expect(getDate(jsonFile1, jsonFile2, 'json')).toEqual(expectedJson);
 });
 
-test('yml', () => {
+test('yml files', () => {
   const expectedStylish = readFile('expectedFileStylish.txt');
   const expectedPlain = readFile('expectedFilePlain.txt');
+  const expectedJson = readFile('expectedFileJson.txt');
   const [ymlFile1, ymlFile2] = [getFixturePath(YML_FILE_1), getFixturePath(YML_FILE_2)];
   expect(getDate(ymlFile1, ymlFile2, 'stylish')).toEqual(expectedStylish);
   expect(getDate(ymlFile1, ymlFile2, 'plain')).toEqual(expectedPlain);
+  expect(getDate(ymlFile1, ymlFile2, 'json')).toEqual(expectedJson);
 });
