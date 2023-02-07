@@ -1,8 +1,10 @@
 import getStylish from './stylish.js';
 import getPlain from './plain.js';
 
-export default {
+const formats = {
   stylish: getStylish,
   plain: getPlain,
   json: JSON.stringify,
 };
+
+export default formats;
