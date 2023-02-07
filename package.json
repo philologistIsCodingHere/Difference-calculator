@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "description": "A difference calculator is a program that determines the difference between two data structures. [![Actions Status](https://github.com/philologistIsCodingHere/frontend-project-46/workflows/hexlet-check/badge.svg)](https://github.com/philologistIsCodingHere/frontend-project-46/actions)",
-  "main": "src/gendiff.js",
+  "main": "src/getdifference.js",
   "scripts": {
     "test": "npx jest"
   },
