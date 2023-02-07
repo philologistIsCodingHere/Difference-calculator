@@ -5,7 +5,7 @@ import yaml from 'js-yaml';
 import getDiff from './getdifference.js';
 import formats from './formatters/index.js';
 
-const getDate = (path1, path2, format) => {
+const getDate = (path1, path2, format = 'stylish') => {
   let result;
   const [cwd1, cwd2] = [process.cwd(path1), process.cwd(path2)];
   const absolutePath1 = path.resolve(cwd1, path1);
