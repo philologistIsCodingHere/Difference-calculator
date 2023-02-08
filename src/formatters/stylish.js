@@ -24,37 +24,37 @@ const getValue = (value, depth) => {
   return value;
 };
 
-const getNode = (key, node, depth) => {
+const getNode = (node, depth) => {
   const startIndents = INDENT.repeat(depth);
   const endIndents = INDENT.repeat(depth + START_DEPTH);
   const result = [];
-  const [type, value] = [node.typeValue, node.valueItem];
+  const { key, type, value } = node;
   if (type === 'added') {
-    result.push(`${startIndents}${ADDED}${key}: ${getValue(value, depth)}`);
+    return [...result, `${startIndents}${ADDED}${key}: ${getValue(value, depth)}`];
   }
   if (type === 'removed') {
-    result.push(`${startIndents}${REMOVED}${key}: ${getValue(value, depth)}`);
+    return [...result, `${startIndents}${REMOVED}${key}: ${getValue(value, depth)}`];
   }
   if (type === 'changed') {
     const [value1, value2] = value;
-    result.push(`${startIndents}${REMOVED}${key}: ${getValue(value1, depth)}`);
-    result.push(`${startIndents}${ADDED}${key}: ${getValue(value2, depth)}`);
+    const resVal1 = [...result, `${startIndents}${REMOVED}${key}: ${getValue(value1, depth)}`];
+    const resVal2 = [...result, `${startIndents}${ADDED}${key}: ${getValue(value2, depth)}`];
+    return `${resVal1}${LINE_BREAK}${resVal2}`;
   }
   if (type === 'unchanged') {
-    result.push(`${startIndents}${UNCHANGED}${key}: ${getValue(value, depth)}`);
+    return [...result, `${startIndents}${UNCHANGED}${key}: ${getValue(value, depth)}`];
   }
   if (type === 'nested') {
-    result.push(`${startIndents}${NESTED}${key}: {`);
-    const keys = Object.keys(value);
-    const nodesString = keys.map((item) => getNode(item, value[item], depth + STEP));
-    result.push(`${nodesString.join(LINE_BREAK)}\n${endIndents}}`);
+    const startResult = [...result, `${startIndents}${NESTED}${key}: {`];
+    const nodesString = value.map((item) => getNode(item, depth + STEP));
+    const endResult = [...result, `${nodesString.join(LINE_BREAK)}\n${endIndents}}`];
+    return `${startResult}${LINE_BREAK}${endResult}`;
   }
   return result.join(LINE_BREAK);
 };
 
 const getStylish = (tree) => {
-  const keys = Object.keys(tree);
-  const nodes = keys.map((key) => getNode(key, tree[key], START_DEPTH));
+  const nodes = tree.map((node) => getNode(node, START_DEPTH));
   return `{${LINE_BREAK}${nodes.join(LINE_BREAK)}${LINE_BREAK}}`;
 };
 
