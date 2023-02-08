@@ -23,7 +23,7 @@ const getDiff = (obj1, obj2) => {
   });
 };
 
-const gendiff = (path1, path2, format) => {
+const gendiff = (path1, path2, format = 'stylish') => {
   const [fileContent1, fileContent2] = getContent(path1, path2);
   const diff = getDiff(fileContent1, fileContent2);
   return formats[format](diff);
