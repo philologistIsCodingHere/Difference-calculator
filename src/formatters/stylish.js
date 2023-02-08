@@ -14,11 +14,7 @@ const getValue = (value, depth) => {
   const endIndents = INDENT.repeat(depth + START_DEPTH);
   if (_.isObject(value)) {
     const keys = Object.keys(value);
-    const result = [];
-    keys.map((key) => result.push(
-      `${startIndents}${UNCHANGED}${key}: `,
-      `${getValue(value[key], depth + STEP)}${LINE_BREAK}`,
-    ));
+    const result = keys.map((key) => `${startIndents}${UNCHANGED}${key}: ${getValue(value[key], depth + STEP)}${LINE_BREAK}`);
     return `{${LINE_BREAK}${result.join('')}${endIndents}}`;
   }
   return value;
