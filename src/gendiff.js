@@ -1,5 +1,5 @@
 import { program } from 'commander';
-import getDate from './parser.js';
+import gendiff from './getdifference.js';
 
 program
   .description('Compares two configuration files and shows a difference.')
@@ -8,7 +8,7 @@ program
   .argument('<filepath2>')
   .option('-f, --format <type>', 'output format', 'stylish')
   .action((filepath1, filepath2) => {
-    console.log(getDate(filepath1, filepath2, program.opts().format));
+    console.log(gendiff(filepath1, filepath2, program.opts().format));
   });
 
 program.parse();
