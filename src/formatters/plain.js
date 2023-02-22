@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 const LINE_BREAK = '\n';
 
-const getValue = (value) => {
+const stringify = (value) => {
   if (_.isObject(value)) {
     return '[complex value]';
   }
@@ -15,23 +15,20 @@ const getValue = (value) => {
 const getNode = (node, path = []) => {
   const { key, type, value } = node;
   const newPath = [...path, key];
+  newPath.filter((item) => !!item.length).join(LINE_BREAK);
   const result = [];
-  if (type === 'added') {
-    return [...result, `Property '${newPath.join('.')}' was added with value: ${getValue(value)}`];
+  switch (type) {
+    case 'added':
+      return [...result, `Property '${newPath.join('.')}' was added with value: ${stringify(value)}`];
+    case 'removed':
+      return [...result, `Property '${newPath.join('.')}' was removed`];
+    case 'changed':
+      return [...result, `Property '${newPath.join('.')}' was updated. From ${stringify(value[0])} to ${stringify(value[1])}`];
+    case 'nested':
+      return [...result, value.flatMap((item) => getNode(item, newPath)).join(LINE_BREAK)];
+    default:
+      return result;
   }
-  if (type === 'removed') {
-    return [...result, `Property '${newPath.join('.')}' was removed`];
-  }
-  if (type === 'changed') {
-    const [value1, value2] = value;
-    return [...result, `Property '${newPath.join('.')}' was updated. From ${getValue(value1)} to ${getValue(value2)}`];
-  }
-  if (type === 'nested') {
-    const nodesString = value.flatMap((item) => getNode(item, newPath));
-    return [...result, nodesString.join(LINE_BREAK)];
-  }
-  newPath.filter((item) => !!item.length).join('\n');
-  return result;
 };
 
 const getPlain = (tree) => {

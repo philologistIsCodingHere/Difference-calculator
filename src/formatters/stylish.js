@@ -1,57 +1,46 @@
 import _ from 'lodash';
 
-const INDENT = '  ';
-const ADDED = '+ ';
-const REMOVED = '- ';
-const UNCHANGED = '  ';
+const REPLACER = '  ';
+const ADDED = '+';
+const REMOVE = '-';
 const LINE_BREAK = '\n';
-const NESTED = '  ';
-const START_DEPTH = 1;
-const STEP = 2;
 
-const getValue = (value, depth) => {
-  const startIndents = INDENT.repeat(depth + STEP);
-  const endIndents = INDENT.repeat(depth + START_DEPTH);
-  if (_.isObject(value)) {
-    const keys = Object.keys(value);
-    const result = keys.map((key) => `${startIndents}${UNCHANGED}${key}: ${getValue(value[key], depth + STEP)}${LINE_BREAK}`);
-    return `{${LINE_BREAK}${result.join('')}${endIndents}}`;
+const makeReplaces = (depth) => `${REPLACER.repeat((2 * depth - 1))}`;
+
+const stringify = (data, depth) => {
+  if (!_.isObject(data)) {
+    return data;
   }
-  return value;
+  const result = Object.entries(data).map(([key, value]) => `${makeReplaces(depth + 1)}  ${key}: ${stringify(value, depth + 1)}`);
+  return `{${LINE_BREAK}${result.join(LINE_BREAK)}${LINE_BREAK}${makeReplaces(depth)}  }`;
 };
 
-const getNode = (node, depth) => {
-  const startIndents = INDENT.repeat(depth);
-  const endIndents = INDENT.repeat(depth + START_DEPTH);
-  const result = [];
-  const { key, type, value } = node;
-  if (type === 'added') {
-    return [...result, `${startIndents}${ADDED}${key}: ${getValue(value, depth)}`];
-  }
-  if (type === 'removed') {
-    return [...result, `${startIndents}${REMOVED}${key}: ${getValue(value, depth)}`];
-  }
-  if (type === 'changed') {
-    const [value1, value2] = value;
-    const resVal1 = [...result, `${startIndents}${REMOVED}${key}: ${getValue(value1, depth)}`];
-    const resVal2 = [...result, `${startIndents}${ADDED}${key}: ${getValue(value2, depth)}`];
-    return `${resVal1}${LINE_BREAK}${resVal2}`;
-  }
-  if (type === 'unchanged') {
-    return [...result, `${startIndents}${UNCHANGED}${key}: ${getValue(value, depth)}`];
-  }
-  if (type === 'nested') {
-    const startResult = [...result, `${startIndents}${NESTED}${key}: {`];
-    const nodesString = value.map((item) => getNode(item, depth + STEP));
-    const endResult = [...result, `${nodesString.join(LINE_BREAK)}\n${endIndents}}`];
-    return `${startResult}${LINE_BREAK}${endResult}`;
-  }
-  return result.join(LINE_BREAK);
-};
+const getString = (key, value, depth, symbol = ' ') => `${makeReplaces(depth)}${symbol} ${key}: ${stringify(value, depth)}`;
 
-const getStylish = (tree) => {
-  const nodes = tree.map((node) => getNode(node, START_DEPTH));
-  return `{${LINE_BREAK}${nodes.join(LINE_BREAK)}${LINE_BREAK}}`;
+const getStylish = (data) => {
+  const iter = (nodes, depth) => nodes.map(({ key, type, value }) => {
+    switch (type) {
+      case 'nested':
+        return [
+          `${makeReplaces(depth)}  ${key}: {`,
+          iter(value, depth + 1),
+          `${makeReplaces(depth)}  }`,
+        ];
+      case 'added':
+        return getString(key, value, depth, ADDED);
+      case 'removed':
+        return getString(key, value, depth, REMOVE);
+      case 'changed':
+        return [
+          `${getString(key, value[0], depth, REMOVE)}`,
+          `${getString(key, value[1], depth, ADDED)}`,
+        ].join(LINE_BREAK);
+      default:
+        return getString(key, value, depth);
+    }
+  });
+  const result = iter(data, 1).flat(Infinity);
+  return `{${LINE_BREAK}${result.join(LINE_BREAK)}${LINE_BREAK}}`;
 };
 
 export default getStylish;
