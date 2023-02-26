@@ -9,31 +9,32 @@ const stringify = (value) => {
   if (typeof value === 'string') {
     return `'${value}'`;
   }
-  return value;
+  return `${value}`;
 };
 
 const getNode = (node, path = []) => {
   const { key, type, value } = node;
   const newPath = [...path, key];
   newPath.filter((item) => !!item.length).join(LINE_BREAK);
-  const result = [];
   switch (type) {
     case 'added':
-      return [...result, `Property '${newPath.join('.')}' was added with value: ${stringify(value)}`];
+      return `Property '${newPath.join('.')}' was added with value: ${stringify(value)}${LINE_BREAK}`;
     case 'removed':
-      return [...result, `Property '${newPath.join('.')}' was removed`];
+      return `Property '${newPath.join('.')}' was removed${LINE_BREAK}`;
     case 'changed':
-      return [...result, `Property '${newPath.join('.')}' was updated. From ${stringify(value[0])} to ${stringify(value[1])}`];
+      return `Property '${newPath.join('.')}' was updated. From ${stringify(value[0])} to ${stringify(value[1])}${LINE_BREAK}`;
     case 'nested':
-      return [...result, value.flatMap((item) => getNode(item, newPath)).join(LINE_BREAK)];
+      return `${value.flatMap((item) => getNode(item, newPath)).join('')}`;
+    case 'unchanged':
+      return '';
     default:
-      return result;
+      throw new Error(`${type} is not found`);
   }
 };
 
 const getPlain = (tree) => {
   const plainFormat = tree.flatMap((node) => getNode(node));
-  return plainFormat.join(LINE_BREAK);
+  return plainFormat.join('').trim();
 };
 
 export default getPlain;

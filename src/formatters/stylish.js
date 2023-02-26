@@ -5,26 +5,26 @@ const ADDED = '+';
 const REMOVE = '-';
 const LINE_BREAK = '\n';
 
-const makeReplaces = (depth) => `${REPLACER.repeat((2 * depth - 1))}`;
+const makeIndent = (depth) => REPLACER.repeat(2 * depth - 1);
 
 const stringify = (data, depth) => {
   if (!_.isObject(data)) {
     return data;
   }
-  const result = Object.entries(data).map(([key, value]) => `${makeReplaces(depth + 1)}  ${key}: ${stringify(value, depth + 1)}`);
-  return `{${LINE_BREAK}${result.join(LINE_BREAK)}${LINE_BREAK}${makeReplaces(depth)}  }`;
+  const result = Object.entries(data).map(([key, value]) => `${makeIndent(depth + 1)}  ${key}: ${stringify(value, depth + 1)}`);
+  return `{${LINE_BREAK}${result.join(LINE_BREAK)}${LINE_BREAK}${makeIndent(depth)}  }`;
 };
 
-const getString = (key, value, depth, symbol = ' ') => `${makeReplaces(depth)}${symbol} ${key}: ${stringify(value, depth)}`;
+const getString = (key, value, depth, symbol = ' ') => `${makeIndent(depth)}${symbol} ${key}: ${stringify(value, depth)}`;
 
 const getStylish = (data) => {
   const iter = (nodes, depth) => nodes.map(({ key, type, value }) => {
     switch (type) {
       case 'nested':
         return [
-          `${makeReplaces(depth)}  ${key}: {`,
+          `${makeIndent(depth)}  ${key}: {`,
           iter(value, depth + 1),
-          `${makeReplaces(depth)}  }`,
+          `${makeIndent(depth)}  }`,
         ];
       case 'added':
         return getString(key, value, depth, ADDED);
