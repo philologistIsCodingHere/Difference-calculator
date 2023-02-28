@@ -1,31 +1,23 @@
-import _ from 'lodash';
-import getContent from './helper.js';
+import { readFileSync } from 'fs';
+import { resolve, extname } from 'path';
+import { cwd } from 'process';
 import formats from './formatters/index.js';
+import getParse from './parser.js';
+import buildDiff from './buildDiff.js';
 
-const getDiff = (obj1, obj2) => {
-  const keys1 = Object.keys(obj1);
-  const keys2 = Object.keys(obj2);
-  const unionKeys = _.sortBy(_.union(keys1, keys2));
-  return unionKeys.map((item) => {
-    if (!Object.hasOwn(obj2, item)) {
-      return { key: item, type: 'removed', value: obj1[item] };
-    }
-    if (!Object.hasOwn(obj1, item)) {
-      return { key: item, type: 'added', value: obj2[item] };
-    }
-    if (obj1[item] === obj2[item]) {
-      return { key: item, type: 'unchanged', value: obj1[item] };
-    }
-    if (_.isObject(obj1[item]) && _.isObject(obj2[item])) {
-      return { key: item, type: 'nested', value: getDiff(obj1[item], obj2[item]) };
-    }
-    return { key: item, type: 'changed', value: [obj1[item], obj2[item]] };
-  });
+const getContent = (path1, path2) => {
+  const fullPathFile1 = resolve(cwd(), path1);
+  const fullPathFile2 = resolve(cwd(), path2);
+  const readFile1 = readFileSync(fullPathFile1);
+  const readFile2 = readFileSync(fullPathFile2);
+  const content1 = getParse((extname(path1).slice(1)), readFile1);
+  const content2 = getParse((extname(path2).slice(1)), readFile2);
+  return [content1, content2];
 };
 
 const gendiff = (path1, path2, format = 'stylish') => {
   const [fileContent1, fileContent2] = getContent(path1, path2);
-  const diff = getDiff(fileContent1, fileContent2);
+  const diff = buildDiff(fileContent1, fileContent2);
   return formats(diff, format);
 };
 

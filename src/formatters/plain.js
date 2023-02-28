@@ -9,7 +9,7 @@ const stringify = (value) => {
   if (typeof value === 'string') {
     return `'${value}'`;
   }
-  return `${value}`;
+  return String(value);
 };
 
 const getNode = (node, path = []) => {
